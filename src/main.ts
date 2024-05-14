@@ -4,6 +4,7 @@ import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
 import { ExceptionsLoggerFilter } from "./utils/exceptionsLogger.filter";
+import * as cors from 'cors';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -24,6 +25,14 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
     app.enableCors();
+
+    // Or enable CORS with specific settings
+    app.use(cors({
+        origin: '*', // specify allowed origin(s)
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // specify allowed methods
+        credentials: true, // include credentials in requests
+    }));
+
 
     const port = configService.get('PORT') ?? 3000;
     await app.listen(port);
